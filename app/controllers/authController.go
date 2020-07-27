@@ -34,24 +34,24 @@ func (controller AuthController) Authentication(c *gin.Context) {
 
 func getAuthenticationParams(c *gin.Context) (utils.AuthenticationRequestDto, error) {
 	var params utils.AuthenticationRequestDto
-	var scope string
-	if scope = c.Query("scope"); scope == "" {
+	scope := c.Query("scope")
+	if scope == "" {
 		return params, errors.New(fmt.Sprintf("scope is required"))
 	}
-	var responseType string
-	if responseType = c.Query("response_type"); responseType == "" {
+	responseType := c.Query("response_type")
+	if responseType == "" {
 		return params, errors.New(fmt.Sprintf("response_type is required"))
 	}
-	var clientID string
-	if clientID = c.Query("client_id"); clientID == "" {
+	clientID := c.Query("client_id")
+	if clientID == "" {
 		return params, errors.New(fmt.Sprintf("client_id is required"))
 	}
-	var redirectURL string
-	if redirectURL = c.Query("redirect_url"); redirectURL == "" {
+	redirectURL := c.Query("redirect_url")
+	if redirectURL == "" {
 		return params, errors.New(fmt.Sprintf("redirect_url is required"))
 	}
-	var state string
-	if state = c.Query("state"); state == "" {
+	state := c.Query("state")
+	if state == "" {
 		return params, errors.New(fmt.Sprintf("state is required"))
 	}
 	params.Scope = scope
