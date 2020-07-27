@@ -26,9 +26,10 @@ func (controller AuthController) Authentication(c *gin.Context) {
 		})
 		return
 	}
-	c.JSON(http.StatusOK, map[string]interface{}{
-		"result": authNParams,
-	})
+
+	//clientIDが登録されているか確認しクライアントを特定
+	//特定したclientとclientが登録しているredirectUrlが一致しているかを確認
+	//認証画面を返す (認証パラメーターをつけてリダイレクト)
 
 }
 
