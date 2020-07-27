@@ -1,0 +1,17 @@
+version: '3'
+services: 
+    db:
+        image: postgres
+        container_name: 'auth_server_db'
+        environment: 
+            - POSTGRES_USER=postgres
+            - POSTGRES_PASSWORD=postgres
+        ports: 
+            - 15432:5432
+        restart: "always"
+        tty: true
+        volumes: 
+            - auth_server_db_volume:/var/lib/postgresql/data
+volumes: 
+    auth_server_db_volume:
+        driver: "local"
