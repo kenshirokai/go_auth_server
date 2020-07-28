@@ -1,12 +1,11 @@
-package services_test
+package services
 
 import (
 	"testing"
 
-	"github.com/kenshirokai/go_app_server/repositories"
-	"github.com/kenshirokai/go_app_server/services"
-	"github.com/kenshirokai/go_app_server/utils"
 	"github.com/kenshirokai/go_app_server/domain"
+	"github.com/kenshirokai/go_app_server/repositories"
+	"github.com/kenshirokai/go_app_server/utils"
 )
 
 func TestCreate(t *testing.T) {
@@ -42,8 +41,8 @@ func TestFindByEmail(t *testing.T) {
 	testEmail := "findbyemail@gmail"
 	badEmail := "badEmail"
 	user := domain.User{
-		Name: "test Find By Email",
-		Email: testEmail,
+		Name:     "test Find By Email",
+		Email:    testEmail,
 		Password: "test FindByEmail",
 	}
 	if err := testdb.Create(&user).Error; err != nil {
@@ -51,8 +50,8 @@ func TestFindByEmail(t *testing.T) {
 	}
 	testCases := []struct {
 		Input string
-		Want uint
-	} {
+		Want  uint
+	}{
 		{Input: testEmail, Want: user.ID},
 		{Input: badEmail, Want: 0},
 	}
@@ -65,11 +64,10 @@ func TestFindByEmail(t *testing.T) {
 	}
 }
 
-
 /*
   Helpers
 */
-func getUserService() services.UserService {
-	return services.NewUserService(
+func getUserService() UserService {
+	return NewUserService(
 		repositories.NewUserRepository(testdb))
 }

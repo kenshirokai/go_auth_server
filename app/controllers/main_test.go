@@ -72,8 +72,9 @@ func getEngine() http.Handler {
 	}
 	authGroup := engine.Group("/auth")
 	{
-		authController := NewAuthController()
-		authGroup.GET("/login", authController.Authentication)
+		authController := NewAuthController(
+			services.NewAuthNService(repositories.NewClientRepository(testdb)))
+		authGroup.GET("", authController.Authentication)
 	}
 	return engine
 }
