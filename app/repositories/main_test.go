@@ -1,4 +1,4 @@
-package services_test
+package repositories
 
 import (
 	"fmt"
@@ -21,19 +21,20 @@ func TestMain(m *testing.M) {
 }
 
 func setUp() {
-	err := godotenv.Load("../../_test/test.env")
-	if err != nil {
-		panic(err)
-	}
+	var err error
+	godotenv.Load("../_test/test.env")
 	testdb, err = gorm.Open("postgres", fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=%s",
 		os.Getenv("DB_HOST"), os.Getenv("DB_PORT"), os.Getenv("DB_USER"),
 		os.Getenv("DB_PASS"), os.Getenv("DB_NAME"), os.Getenv("DB_MODE")))
+	if err != nil {
+		panic(err)
+	}
 	if err := testdb.DB().Ping(); err != nil {
 		panic(err)
 	}
-	testdb.AutoMigrate(&domain.User{})
+	testdb.AutoMigrate(&domain.User{}, &domain.Client{})
 }
 
 func tearDown() {
-	testdb.DropTableIfExists(&domain.User{})
+	testdb.DropTableIfExists(&domain.User{}, &domain.Client{})
 }

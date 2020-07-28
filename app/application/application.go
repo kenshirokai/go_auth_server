@@ -1,6 +1,7 @@
 package application
 
 import (
+	"net/http"
 	"os"
 
 	"github.com/gin-gonic/gin"
@@ -25,6 +26,11 @@ func Start() {
 }
 
 func setHandler() {
+	engine.LoadHTMLGlob("static/*.html")
+	engine.Static("static", "static")
+	engine.Handle("GET", "/", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "index.html", nil)
+	})
 	userGroup := engine.Group("/users")
 	{
 		userService := services.NewUserService(
@@ -35,7 +41,10 @@ func setHandler() {
 	}
 	authGroup := engine.Group("/auth")
 	{
-		authController := controllers.NewAuthController()
-		authGroup.GET("/login", authController.Authentication)
+		authController := controllers.NewAuthController(
+			services.NewAuthNService(
+				repositories.NewClientRepository(
+					db.GetDbInstance())))
+		authGroup.GET("", authController.Authentication)
 	}
 }

@@ -1,14 +1,14 @@
-package repositories_test
+package repositories
 
 import (
 	"testing"
+
 	"github.com/kenshirokai/go_app_server/domain"
-	"github.com/kenshirokai/go_app_server/repositories"
 )
 
 func TestCreate(t *testing.T) {
 	//setup
-	userRepo := repositories.NewUserRepository(testdb)
+	userRepo := NewUserRepository(testdb)
 	testCases := []struct {
 		Input domain.User
 		Want  error
@@ -34,25 +34,25 @@ func TestCreate(t *testing.T) {
 
 func TestFindByEmail(t *testing.T) {
 	//setup
-	userRepositpry := repositories.NewUserRepository(testdb)
+	userRepositpry := NewUserRepository(testdb)
 	email := "findTest@gmail"
 	badEmail := "gad@gmail"
 	testUser := domain.User{
-		Name: "test user",
-		Email: email,
+		Name:     "test user",
+		Email:    email,
 		Password: "FindTest",
 	}
-	err := userRepositpry.Create(&testUser)
+	err := testdb.Create(&testUser).Error
 	if err != nil {
 		panic(err)
 	}
 	//Test body
 	testCases := []struct {
 		Input string
-		Want uint
+		Want  uint
 	}{
-		{ Input: email, Want: testUser.ID, },
-		{ Input: badEmail, Want: 0, },
+		{Input: email, Want: testUser.ID},
+		{Input: badEmail, Want: 0},
 	}
 	for _, testData := range testCases {
 		user, _ := userRepositpry.FindByEmail(testData.Input)
@@ -60,5 +60,5 @@ func TestFindByEmail(t *testing.T) {
 			t.Errorf("Want ID=%v but got %v", testData.Want, user.ID)
 		}
 	}
-	
+
 }
