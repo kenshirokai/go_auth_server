@@ -1,0 +1,3 @@
+client_id genappid
+name genapp
+redirect_uri http://localhost:9000/
