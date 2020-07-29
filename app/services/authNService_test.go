@@ -15,7 +15,7 @@ func TestIsValid(t *testing.T) {
 	redirectURL := "http://isvalid.xxx.com"
 	client := domain.Client{
 		ClientID:    clientID,
-		RedirectURL: redirectURL,
+		RedirectURI: redirectURL,
 		Name:        "gen app",
 	}
 	if err := testdb.Create(&client).Error; err != nil {

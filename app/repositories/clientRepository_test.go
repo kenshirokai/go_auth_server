@@ -17,7 +17,7 @@ func TestClientCreate(t *testing.T) {
 			Input: domain.Client{
 				Name:        "test client",
 				ClientID:    "test clientID",
-				RedirectURL: "https://xxx.yyyy.com",
+				RedirectURI: "https://xxx.yyyy.com",
 			},
 			Want: nil,
 		},
@@ -36,7 +36,7 @@ func TestClientFindById(t *testing.T) {
 	clientRepository := NewClientRepository(testdb)
 	testClient := domain.Client{
 		ClientID:    clientID,
-		RedirectURL: "https://findbyid.xxx.com",
+		RedirectURI: "https://findbyid.xxx.com",
 		Name:        "test client",
 	}
 	err := testdb.Create(&testClient).Error

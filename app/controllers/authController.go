@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"net/url"
 
 	"github.com/gin-gonic/gin"
 
@@ -38,9 +39,13 @@ func (controller AuthController) Authentication(c *gin.Context) {
 	}
 	//認証画面を返す (認証パラメーターをつけてリダイレクト)
 	loginPagePath := "/"
-	param := fmt.Sprintf("?scope=%s&redirect_uri=%s&response_type=%s&client_id=%s&state=%s",
-		authNParams.Scope, authNParams.RedirectURI, authNParams.ResponseType, authNParams.RedirectURI, authNParams.State)
-	c.Redirect(http.StatusTemporaryRedirect, loginPagePath+param)
+	query := url.Values{}
+	query.Add("scope", authNParams.Scope)
+	query.Add("redirect_uri", authNParams.RedirectURI)
+	query.Add("response_type", authNParams.ResponseType)
+	query.Add("client_id", authNParams.ClientId)
+	query.Add("state", authNParams.State)
+	c.Redirect(http.StatusTemporaryRedirect, loginPagePath+"?"+query.Encode())
 }
 
 func (controller AuthController) Login(c *gin.Context) {}

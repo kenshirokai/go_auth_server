@@ -43,7 +43,7 @@ func (service AuthNService) IsValid(dto utils.AuthenticationRequestDto) error {
 		return InvalidClientErr
 	}
 	//特定したclientとclientが登録しているredirectUrlが一致しているかを確認
-	if client.RedirectURL != dto.RedirectURI {
+	if client.RedirectURI != dto.RedirectURI {
 		return InvalidRedirectUrlErr
 	}
 	return nil

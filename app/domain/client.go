@@ -9,5 +9,5 @@ type Client struct {
 	UpdatedAt   time.Time  `json:"updatedAt"`
 	DeletedAt   *time.Time `sql:"index" json:"deletedAr"`
 	Name        string     `gorm:"not null" json:"name"`
-	RedirectURL string     `gorm:"not null" json:"redirectUrl"`
+	RedirectURI string     `gorm:"not null" json:"redirectUri"`
 }

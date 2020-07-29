@@ -31,6 +31,7 @@ func setHandler() {
 	engine.Handle("GET", "/", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "index.html", nil)
 	})
+
 	userGroup := engine.Group("/users")
 	{
 		userService := services.NewUserService(
