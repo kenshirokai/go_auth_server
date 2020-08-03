@@ -8,6 +8,7 @@ import (
 	"github.com/kenshirokai/go_app_server/config"
 	"github.com/kenshirokai/go_app_server/controllers"
 	"github.com/kenshirokai/go_app_server/db"
+	"github.com/kenshirokai/go_app_server/middleware"
 	"github.com/kenshirokai/go_app_server/repositories"
 	"github.com/kenshirokai/go_app_server/services"
 )
@@ -31,7 +32,7 @@ func setHandler() {
 	engine.Handle("GET", "/", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "index.html", nil)
 	})
-
+	engine.Use(middleware.CORS)
 	userGroup := engine.Group("/users")
 	{
 		userService := services.NewUserService(
