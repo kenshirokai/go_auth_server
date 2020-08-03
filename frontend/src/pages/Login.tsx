@@ -1,11 +1,13 @@
 import React, { useMemo } from "react";
-import { useHistory } from 'react-router-dom';
+import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 
 /**
  *@ Materials
  */
 import LoginForm from "../organisms/LoginForm";
+import Loading from "../organisms/Loading";
+
 /**
  *@ Hooks
  */
@@ -47,28 +49,26 @@ const Login: React.FC = () => {
     [email.state, password.state]
   );
   const handleFailure = () => {
-      history.push('/error')
-  }
-  const { data, loading, error, httpPost } = usePost<{ msg: string }>(
+    history.push("/error");
+  };
+  const { loading, httpPost } = usePost<{ msg: string }>(
     "http://localhost:9001/users",
     body,
-    {
-        failure: handleFailure
-    }
+    { failure: handleFailure }
   );
-  if (loading) {
-    return <span>...loading</span>;
-  }
-  
+
   return (
     <Node>
-      <FormWrapper>
-        <LoginForm
-          emailChange={email.onChange}
-          passwordChange={password.onChange}
-          onClick={httpPost}
-        />
-      </FormWrapper>
+      <Loading isOpen={loading} />
+      {!loading && (
+        <FormWrapper>
+          <LoginForm
+            emailChange={email.onChange}
+            passwordChange={password.onChange}
+            onClick={httpPost}
+          />
+        </FormWrapper>
+      )}
     </Node>
   );
 };
