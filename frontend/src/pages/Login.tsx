@@ -56,7 +56,6 @@ const Login: React.FC = () => {
     body,
     { failure: handleFailure }
   );
-
   return (
     <Node>
       <Loading isOpen={loading} />

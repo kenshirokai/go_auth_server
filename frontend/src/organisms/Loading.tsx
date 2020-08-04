@@ -6,7 +6,6 @@ import styled from "styled-components";
  */
 import Overlay from "../atoms/Overlay";
 import ProgressIndicator from "../atoms/PregressIndicator";
-import { transform } from "lodash";
 
 /**
  *@ Elements & Styles

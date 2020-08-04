@@ -13,6 +13,10 @@ const BaseInput = styled.input`
     border:1px solid #efefef;
     width: 100%;
     box-sizing: border-box;
+    transition: 0.2s ease-in;
+    &:focus {
+        border: 2px solid #63cdda;
+    }
 `
 
 /**

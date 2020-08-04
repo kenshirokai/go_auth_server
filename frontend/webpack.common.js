@@ -1,23 +1,22 @@
 const path = require('path');
 const htmlWebpackPlugin = require('html-webpack-plugin');
 const miniCssExtractPlugin = require('mini-css-extract-plugin');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 const htmlPlugin = new htmlWebpackPlugin({
     template: './static/index.html',
-    filename: 'index.html'
+    filename: 'index.html',
 })
 const cssPlugin = new miniCssExtractPlugin({
     filename: 'style.css'
 })
+const extractTextplugin = new ExtractTextPlugin({
+    filename: '[name].bundle.js',
+    allChunks: true
+})
 
 module.exports = {
-    mode: 'development',
     entry: './index.tsx',
-    output: {
-        path: path.resolve(__dirname, '/dist'),
-        filename: 'bundle.js'
-    },
-    devtool: 'inline-source-map',
     module: {
         rules: [
             {
@@ -36,12 +35,7 @@ module.exports = {
     resolve: {
         extensions: ['.ts', '.tsx', '.js', '.json']
     },
-    devServer: {
-        contentBase: path.resolve(__dirname, '/dist'),
-        port: 3000,
-        open: true
-    },
     plugins: [
-        htmlPlugin, cssPlugin
+        htmlPlugin, cssPlugin, extractTextplugin
     ]
 }

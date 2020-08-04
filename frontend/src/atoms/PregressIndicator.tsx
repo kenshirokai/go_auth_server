@@ -6,18 +6,21 @@ import styled, { keyframes } from "styled-components";
  */
 const rotate = keyframes`
     from {
-        transform: rotate(0deg);
+        transform: scale(0.5);
     }
     to {
-        transform: rotate(360deg);
+        transform: scale(1);
     }
 `
 const Node = styled.span`
    display: inline-block;
    width: 100px;
    height: 100px;
-   background-color: red;
-   animation: ${rotate} 5s linear infinite;
+   /* border: 2px solid #ebebeb; */
+   border-radius: 100px;
+   font-size: 3.3rem;
+   color: #63cdda;
+   /* animation: ${rotate} 5s linear infinite; */
 `;
 
 /**
@@ -25,7 +28,7 @@ const Node = styled.span`
  */
 const ProgressIndicator = () => {
     return (
-        <Node></Node>
+        <Node>Loding...</Node>
     );
 }
 
