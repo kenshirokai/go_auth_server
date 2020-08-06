@@ -62,5 +62,6 @@ func TestIsValid(t *testing.T) {
 */
 func getAuthNService() AuthNService {
 	return NewAuthNService(
-		repositories.NewClientRepository(testdb))
+		repositories.NewClientRepository(testdb),
+		repositories.NewUserRepository(testdb))
 }

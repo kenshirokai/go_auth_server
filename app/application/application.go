@@ -46,6 +46,8 @@ func setHandler() {
 		authController := controllers.NewAuthController(
 			services.NewAuthNService(
 				repositories.NewClientRepository(
+					db.GetDbInstance()),
+				repositories.NewUserRepository(
 					db.GetDbInstance())))
 		authGroup.GET("", authController.Authentication)
 	}

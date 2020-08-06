@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
-	"net/url"
 
 	"github.com/gin-gonic/gin"
 
@@ -38,17 +37,26 @@ func (controller AuthController) Authentication(c *gin.Context) {
 		return
 	}
 	//認証画面を返す (認証パラメーターをつけてリダイレクト)
-	loginPagePath := "/"
-	query := url.Values{}
-	query.Add("scope", authNParams.Scope)
-	query.Add("redirect_uri", authNParams.RedirectURI)
-	query.Add("response_type", authNParams.ResponseType)
-	query.Add("client_id", authNParams.ClientId)
-	query.Add("state", authNParams.State)
-	c.Redirect(http.StatusTemporaryRedirect, loginPagePath+"?"+query.Encode())
+	c.Redirect(http.StatusTemporaryRedirect, authNParams.GetQuery())
 }
 
-func (controller AuthController) Login(c *gin.Context) {}
+func (controller AuthController) Login(c *gin.Context) {
+	var dto utils.LoginRequestDto
+	if err := c.BindJSON(dto); err != nil {
+		c.AbortWithStatus(http.StatusBadRequest)
+		return
+	}
+	//ユーザー情報を取得し有効なユーザーかを判定し
+	//有効なユーザーの場合はIDtokenを発行
+	token, err := controller.service.Login(dto)
+	if err != nil {
+		c.AbortWithStatus(http.StatusBadRequest)
+		return
+	}
+	c.JSON(http.StatusOK, map[string]interface{}{
+		"id_token": token,
+	})
+}
 
 func (controller AuthController) Authorization(c *gin.Context) {}
 
