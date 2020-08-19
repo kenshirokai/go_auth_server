@@ -2,7 +2,6 @@ package services
 
 import (
 	"errors"
-	"os"
 	"strings"
 	"time"
 
@@ -63,6 +62,7 @@ func (service AuthNService) IsValid(dto utils.AuthenticationRequestDto) error {
 
 //loginリクエストをもとに認証していいユーザーか判定する
 func (service AuthNService) Login(dto utils.LoginRequestDto) (token string, err error) {
+
 	user, err := service.userRepository.FindByEmail(dto.Email)
 	if err != nil {
 		err = errors.New("登録されていないemailです")
@@ -73,8 +73,14 @@ func (service AuthNService) Login(dto utils.LoginRequestDto) (token string, err 
 		err = errors.New("emailもしくはpasswordが間違っています")
 		return
 	}
+	token, err = createToken(user)
+	if err != nil {
+		err = errors.New("tokenの作成に失敗しました。")
+	}
 	return
 }
+
+var SecretKey string = "secret"
 
 func createToken(user domain.User) (tokenStr string, err error) {
 	//head
@@ -86,6 +92,7 @@ func createToken(user domain.User) (tokenStr string, err error) {
 	cliems["iat"] = time.Now()
 	cliems["exp"] = time.Now().Add(time.Hour * 24).Unix()
 	//sign
-	tokenStr, err = token.SignedString([]byte(os.Getenv("SECRET_KEY")))
+	// tokenStr, err = token.SignedString([]byte(os.Getenv("SECRET_KEY")))
+	tokenStr, err = token.SignedString([]byte(SecretKey))
 	return
 }

@@ -42,7 +42,7 @@ func (controller AuthController) Authentication(c *gin.Context) {
 
 func (controller AuthController) Login(c *gin.Context) {
 	var dto utils.LoginRequestDto
-	if err := c.BindJSON(dto); err != nil {
+	if err := c.BindJSON(&dto); err != nil {
 		c.AbortWithStatus(http.StatusBadRequest)
 		return
 	}

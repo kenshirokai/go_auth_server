@@ -1,5 +1,15 @@
 version: '3'
-services: 
+services:
+    server:
+        build: 
+            context: .
+            dockerfile: ./proxy/Dockerfile
+        container_name: proxy_server
+        ports: 
+            - "8080:8080"
+        tty: true
+        depends_on: 
+            - db
     db:
         image: postgres
         container_name: 'auth_server_db'
@@ -7,11 +17,21 @@ services:
             - POSTGRES_USER=postgres
             - POSTGRES_PASSWORD=postgres
         ports: 
-            - 15432:5432
+            - 5432
         restart: "always"
         tty: true
         volumes: 
             - auth_server_db_volume:/var/lib/postgresql/data
+    app:
+        build:
+            context: .
+            dockerfile: ./app/Dockerfile
+        container_name: auth_server
+        ports: 
+            - 9001
+        depends_on:
+            - db
+    
 volumes: 
     auth_server_db_volume:
         driver: "local"

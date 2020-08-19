@@ -1,6 +1,6 @@
 import React, { lazy, Suspense } from "react";
 import styled from "styled-components";
-import { HashRouter as Router, Switch, Route } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 /**
  *@ Pages

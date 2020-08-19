@@ -50,5 +50,6 @@ func setHandler() {
 				repositories.NewUserRepository(
 					db.GetDbInstance())))
 		authGroup.GET("", authController.Authentication)
+		authGroup.POST("login", authController.Login)
 	}
 }

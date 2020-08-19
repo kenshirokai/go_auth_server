@@ -1,6 +1,7 @@
 import React, { useMemo } from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import styled from "styled-components";
+import ENV from '../env/index'
 
 /**
  *@ Materials
@@ -13,6 +14,7 @@ import Loading from "../organisms/Loading";
  */
 import usePost from "../hooks/usePost";
 import useInput from "../hooks/useInput";
+
 
 /**
  *@ Element & Styles
@@ -39,6 +41,8 @@ const FormWrapper = styled.div`
  */
 const Login: React.FC = () => {
   const history = useHistory();
+  const location = useLocation();
+  const param = new URLSearchParams(location.search)
   const email = useInput();
   const password = useInput();
   const body = useMemo(
@@ -52,10 +56,11 @@ const Login: React.FC = () => {
     history.push("/error");
   };
   const { loading, httpPost } = usePost<{ msg: string }>(
-    "http://localhost:9001/users",
+    `${ENV.apiBaseUrl}/users`,
     body,
     { failure: handleFailure }
   );
+  
   return (
     <Node>
       <Loading isOpen={loading} />

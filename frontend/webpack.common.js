@@ -3,6 +3,8 @@ const htmlWebpackPlugin = require('html-webpack-plugin');
 const miniCssExtractPlugin = require('mini-css-extract-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
+const environment = process.env.NODE_ENV || 'development';
+
 const htmlPlugin = new htmlWebpackPlugin({
     template: './static/index.html',
     filename: 'index.html',

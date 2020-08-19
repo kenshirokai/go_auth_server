@@ -1,6 +1,6 @@
 import { useState, useCallback } from "react";
 import { HttpCallback } from "../types/Http";
-
+import ENV from '../env/index';
 import { sleep } from '../utils/sleep';
 
 const usePost = <T>(url: string, body: any, callbacks?: HttpCallback) => {
@@ -13,7 +13,7 @@ const usePost = <T>(url: string, body: any, callbacks?: HttpCallback) => {
     const response = await fetch(url, {
       method: "POST",
       cache: "default",
-      mode: "cors",
+      mode: ENV.httpMode,
       headers: {
         "Content-Type": "appication/json",
       },
