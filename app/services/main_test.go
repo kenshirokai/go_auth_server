@@ -5,6 +5,7 @@ import (
 	"os"
 	"testing"
 
+	"github.com/gomodule/redigo/redis"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 	"github.com/joho/godotenv"
@@ -12,6 +13,7 @@ import (
 )
 
 var testdb *gorm.DB
+var pool *redis.Pool
 
 func TestMain(m *testing.M) {
 	setUp()
@@ -32,6 +34,9 @@ func setUp() {
 		panic(err)
 	}
 	testdb.AutoMigrate(&domain.User{}, &domain.Client{})
+
+	//redis
+	pool = redis.NewPool(func() (redis.Conn, error) { return redis.Dial("tcp", os.Getenv("REDIS_ADDR")) }, 10)
 }
 
 func tearDown() {

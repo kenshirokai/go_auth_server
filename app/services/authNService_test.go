@@ -1,6 +1,7 @@
 package services
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/kenshirokai/go_app_server/domain"
@@ -57,11 +58,31 @@ func TestIsValid(t *testing.T) {
 	}
 }
 
+func TestGenerateCode(t *testing.T) {
+	testcases := []struct {
+		Input int
+		Want  int
+	}{
+		{Input: 20, Want: 20},
+		{Input: 100, Want: 100},
+		{Input: 150, Want: 150},
+	}
+	//test body
+	for _, test := range testcases {
+		code := generateCode(test.Input)
+		fmt.Printf("generated code : %s\r\n", code)
+		if len(code) != test.Want {
+			t.Errorf("want %v but got %v", test.Want, code)
+		}
+	}
+}
+
 /*
   Helpers
 */
 func getAuthNService() AuthNService {
 	return NewAuthNService(
 		repositories.NewClientRepository(testdb),
-		repositories.NewUserRepository(testdb))
+		repositories.NewUserRepository(testdb),
+		repositories.NewAuthRepository(pool))
 }

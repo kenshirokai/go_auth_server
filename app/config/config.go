@@ -1,6 +1,7 @@
 package config
 
 import (
+	"flag"
 	"fmt"
 
 	"github.com/joho/godotenv"
@@ -8,7 +9,12 @@ import (
 )
 
 func Configure() {
-	env("develop")
+	mode := flag.String("mode", "develop", "起動するモードの設定")
+	fmt.Printf("mode : %s\n", *mode)
+	flag.Parse()
+	fmt.Println("-------------mode-------------")
+	fmt.Println("------------" + *mode + "------------")
+	env(*mode)
 	db.Init()
 }
 

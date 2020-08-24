@@ -8,6 +8,7 @@ import (
 	"testing"
 
 	"github.com/gin-gonic/gin"
+	"github.com/gomodule/redigo/redis"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 	"github.com/joho/godotenv"
@@ -18,6 +19,7 @@ import (
 
 var testServer *httptest.Server
 var testdb *gorm.DB
+var pool *redis.Pool
 
 func TestMain(m *testing.M) {
 	setUp()
@@ -47,6 +49,7 @@ func env() {
 		panic(err)
 	}
 }
+
 func dbOpen() {
 	var err error
 	testdb, err = gorm.Open("postgres", fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=%s",
@@ -59,7 +62,10 @@ func dbOpen() {
 		panic(err)
 	}
 	testdb.AutoMigrate(&domain.User{})
+	//redis
+	pool = redis.NewPool(func() (redis.Conn, error) { return redis.Dial("tcp", os.Getenv("REDIS_ADDR")) }, 10)
 }
+
 func getEngine() http.Handler {
 	engine := gin.New()
 	userGroup := engine.Group("/users")
@@ -73,7 +79,7 @@ func getEngine() http.Handler {
 	authGroup := engine.Group("/auth")
 	{
 		authController := NewAuthController(
-			services.NewAuthNService(repositories.NewClientRepository(testdb), repositories.NewUserRepository(testdb)))
+			services.NewAuthNService(repositories.NewClientRepository(testdb), repositories.NewUserRepository(testdb), repositories.NewAuthRepository(pool)))
 		authGroup.GET("", authController.Authentication)
 	}
 	return engine

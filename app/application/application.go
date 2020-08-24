@@ -27,12 +27,17 @@ func Start() {
 }
 
 func setHandler() {
+	// view
 	engine.LoadHTMLGlob("static/*.html")
 	engine.Static("static", "static")
 	engine.Handle("GET", "/", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "index.html", nil)
 	})
+
+	// middlewares
 	engine.Use(middleware.CORS)
+
+	// handlers
 	userGroup := engine.Group("/users")
 	{
 		userService := services.NewUserService(
@@ -48,7 +53,8 @@ func setHandler() {
 				repositories.NewClientRepository(
 					db.GetDbInstance()),
 				repositories.NewUserRepository(
-					db.GetDbInstance())))
+					db.GetDbInstance()),
+				repositories.NewAuthRepository(db.GetPool())))
 		authGroup.GET("", authController.Authentication)
 		authGroup.POST("login", authController.Login)
 	}

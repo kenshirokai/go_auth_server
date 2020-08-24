@@ -1,0 +1,4 @@
+FROM golang
+
+WORKDIR /go/app/src/
+COPY ./app/ ./

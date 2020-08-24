@@ -28,10 +28,28 @@ func (dto AuthenticationRequestDto) GetQuery() string {
 	return loginPagePath + "?" + query.Encode()
 }
 
+//認証リクエストをバインドさせる
 type LoginRequestDto struct {
-	Email    string `json:"email"`
-	Password string `json:"password"`
+	Email       string `json:"email"`
+	Password    string `json:"password"`
+	RedirectURI string `json:"redirect_uri"`
+	State       string `json:"state"`
 }
 
 //認可リクエスト
 type AuthorizationRequestDto struct{}
+
+//認証認可フローでキャッシュが必要になった場合にやり取りする入れ物
+type AuthFlowInfo struct {
+	Code        string `redis:"code"`
+	State       string `redis:"state"`
+	RedirectURI string `redis:"redirect_uri"`
+}
+
+func (info AuthFlowInfo) GetQuery() string {
+	url := url.Values{}
+	url.Set("code", info.Code)
+	url.Set("state", info.State)
+	url.Set("redirect_uri", info.RedirectURI)
+	return info.RedirectURI + "?" + url.Encode()
+}

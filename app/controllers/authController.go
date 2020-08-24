@@ -47,15 +47,14 @@ func (controller AuthController) Login(c *gin.Context) {
 		return
 	}
 	//ユーザー情報を取得し有効なユーザーかを判定し
-	//有効なユーザーの場合はIDtokenを発行
-	token, err := controller.service.Login(dto)
+	//有効なユーザーの場合はcodeを発行
+	result, err := controller.service.Login(dto)
 	if err != nil {
 		c.AbortWithStatus(http.StatusBadRequest)
 		return
 	}
-	c.JSON(http.StatusOK, map[string]interface{}{
-		"id_token": token,
-	})
+	//clientに指定されたURIへリダイレクト
+	c.Redirect(http.StatusTemporaryRedirect, result.GetQuery())
 }
 
 func (controller AuthController) Authorization(c *gin.Context) {}

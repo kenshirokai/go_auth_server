@@ -12,6 +12,7 @@ module.exports = merge(common, {
     },
     devServer: {
         port: 3000,
+        host: '0.0.0.0',
         open: true,
         contentBase: path.resolve(__dirname, 'dist')
     }

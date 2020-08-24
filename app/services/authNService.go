@@ -2,6 +2,7 @@ package services
 
 import (
 	"errors"
+	"math/rand"
 	"strings"
 	"time"
 
@@ -15,20 +16,23 @@ import (
 type IAuthNService interface {
 	//認証リクエストが有効かどうか
 	IsValid(dto utils.AuthenticationRequestDto) error
-	Login(dto utils.LoginRequestDto) (token string, err error)
+	Login(dto utils.LoginRequestDto) (authFlowInfo utils.AuthFlowInfo, err error)
 }
 
 type AuthNService struct {
 	clientRepository repositories.IClientRepository
 	userRepository   repositories.IUserRepository
+	authRepository   repositories.IAuthRepository
 }
 
 func NewAuthNService(
 	clientRepository repositories.IClientRepository,
-	userRepository repositories.IUserRepository) AuthNService {
+	userRepository repositories.IUserRepository,
+	authRepository repositories.IAuthRepository) AuthNService {
 	return AuthNService{
 		clientRepository: clientRepository,
 		userRepository:   userRepository,
+		authRepository:   authRepository,
 	}
 }
 
@@ -37,6 +41,8 @@ var ScopeErr = errors.New("scope should be include openid")
 var ResponseTypeErr = errors.New("response_type should be code")
 var InvalidClientErr = errors.New("invalid client")
 var InvalidRedirectUrlErr = errors.New("invalid redirectURL")
+
+var codeLen int = 150
 
 //有効な認証リクエストか
 func (service AuthNService) IsValid(dto utils.AuthenticationRequestDto) error {
@@ -61,7 +67,7 @@ func (service AuthNService) IsValid(dto utils.AuthenticationRequestDto) error {
 }
 
 //loginリクエストをもとに認証していいユーザーか判定する
-func (service AuthNService) Login(dto utils.LoginRequestDto) (token string, err error) {
+func (service AuthNService) Login(dto utils.LoginRequestDto) (authFlowInfo utils.AuthFlowInfo, err error) {
 
 	user, err := service.userRepository.FindByEmail(dto.Email)
 	if err != nil {
@@ -73,16 +79,45 @@ func (service AuthNService) Login(dto utils.LoginRequestDto) (token string, err 
 		err = errors.New("emailもしくはpasswordが間違っています")
 		return
 	}
-	token, err = createToken(user)
-	if err != nil {
-		err = errors.New("tokenの作成に失敗しました。")
+	//認証出来たら
+	//codeを発行
+	code := generateCode(codeLen)
+	authFlowInfo = utils.AuthFlowInfo{
+		Code:        code,
+		State:       dto.State,
+		RedirectURI: dto.RedirectURI,
 	}
+	//codeをキーにstateとredirect_uriを保存
+	err = service.authRepository.SetCodeValues(code, authFlowInfo)
+	if err != nil {
+		err = errors.New("エラーが発生しました")
+	}
+	// token, err = createToken(user)
+	// if err != nil {
+	// 	err = errors.New("tokenの作成に失敗しました。")
+	// }
 	return
 }
 
+//codeを生成
+func generateCode(num int) (code string) {
+
+	rand.Seed(time.Now().Unix())
+	rs1Letters := []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ123456789")
+
+	b := make([]rune, num)
+	for i := range b {
+		b[i] = rs1Letters[rand.Intn(len(rs1Letters))]
+	}
+	code = string(b)
+	return
+}
+
+//バレたらやばいキー
 var SecretKey string = "secret"
 
-func createToken(user domain.User) (tokenStr string, err error) {
+//accessTokenを作成
+func generateToken(user domain.User) (tokenStr string, err error) {
 	//head
 	token := jwt.New(jwt.SigningMethodHS256)
 	//payload
