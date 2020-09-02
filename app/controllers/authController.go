@@ -21,6 +21,7 @@ func NewAuthController(service services.IAuthNService) AuthController {
 	}
 }
 
+//　認証　ログイン画面を返す
 func (controller AuthController) Authentication(c *gin.Context) {
 	//認証リクエストからパラメーターを取り出す
 	authNParams, err := getAuthenticationParams(c)
@@ -39,6 +40,7 @@ func (controller AuthController) Authentication(c *gin.Context) {
 	//認証画面を返す (認証パラメーターをつけてリダイレクト)
 	c.Redirect(http.StatusTemporaryRedirect, authNParams.GetQuery())
 }
+
 
 func (controller AuthController) Login(c *gin.Context) {
 	var dto utils.LoginRequestDto

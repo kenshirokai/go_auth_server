@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import styled from "styled-components";
-import ENV from '../env/index'
+import ENV from "../env/index";
 
 /**
  *@ Materials
@@ -14,7 +14,6 @@ import Loading from "../organisms/Loading";
  */
 import usePost from "../hooks/usePost";
 import useInput from "../hooks/useInput";
-
 
 /**
  *@ Element & Styles
@@ -39,10 +38,10 @@ const FormWrapper = styled.div`
 /**
  *@ ReactComponents
  */
-const Login: React.FC = () => {
+const SignUp: React.FC = () => {
   const history = useHistory();
   const location = useLocation();
-  const param = new URLSearchParams(location.search)
+  const param = new URLSearchParams(location.search);
   const email = useInput();
   const password = useInput();
   const body = useMemo(
@@ -60,24 +59,24 @@ const Login: React.FC = () => {
     body,
     { failure: handleFailure }
   );
-  
+
   return (
     <Node>
       <Loading isOpen={loading} />
       {!loading && (
         <>
-        <FormWrapper>
-          <h1>login</h1>
-          <LoginForm
-            emailChange={email.onChange}
-            passwordChange={password.onChange}
-            onClick={httpPost}
-          />
-        </FormWrapper>
+          <FormWrapper>
+            <h1>sign up</h1>
+            <LoginForm
+              emailChange={email.onChange}
+              passwordChange={password.onChange}
+              onClick={httpPost}
+            />
+          </FormWrapper>
         </>
       )}
     </Node>
   );
 };
 
-export default Login;
+export default SignUp;

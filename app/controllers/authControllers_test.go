@@ -14,7 +14,7 @@ func TestGetAuthenticationParams(t *testing.T) {
 		Want  string
 	}{
 		{
-			Input: "?scope=scope&client_id=client_id&response_type=response_type&redirect_url=redirect_url&state=state",
+			Input: "?scope=scope&client_id=client_id&response_type=response_type&redirect_uri=redirect_url&state=state",
 			Want:  "scope",
 		},
 		{Input: "", Want: ""},
@@ -23,9 +23,10 @@ func TestGetAuthenticationParams(t *testing.T) {
 		context, _ := gin.CreateTestContext(httptest.NewRecorder())
 		req, _ := http.NewRequest("GET", testServer.URL+testData.Input, nil)
 		context.Request = req
-		result, _ := getAuthenticationParams(context)
+		result, err := getAuthenticationParams(context)
 		if testData.Want != result.Scope {
 			t.Errorf("Want %v but got %v", testData.Want, result.Scope)
+			t.Errorf("error %v", err)
 		}
 	}
 }

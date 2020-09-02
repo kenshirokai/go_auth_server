@@ -6,6 +6,8 @@ services:
       dockerfile: ./app/Dockerfile.develop
     volumes:
       - ./app/:/go/app/src/
+    ports:
+      - 9001:9001
     tty: true
     depends_on:
       - db
