@@ -11,6 +11,7 @@ services:
         depends_on: 
             - db
             - redis
+            - app
     db:
         image: postgres
         container_name: 'auth_server_db'

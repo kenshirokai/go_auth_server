@@ -10,7 +10,6 @@ import (
 
 func Configure() {
 	mode := flag.String("mode", "develop", "起動するモードの設定")
-	fmt.Printf("mode : %s\n", *mode)
 	flag.Parse()
 	fmt.Println("-------------mode-------------")
 	fmt.Println("------------" + *mode + "------------")

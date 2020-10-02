@@ -15,6 +15,6 @@ RUN git config --global http.proxy http://50.27.190.111:8080
 RUN git config --global https.proxy http://50.27.190.111:8080
 RUN go version
 RUN GOOS=linux CGO_ENABLED=0 GOARCH=amd64  \ 
-    go build -a -tags netgo -installsuffix netgo ./cmd/main.go
+    go build -a -tags netgo -installsuffix netgo ./cmd/main.go 
 
-ENTRYPOINT [ "./main" ]
+ENTRYPOINT [ "./main", "-mode=prod" ]
